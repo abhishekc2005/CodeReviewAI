@@ -25,7 +25,7 @@ setReview(response.data.review);
 }
   
   useEffect(() => {
-    prism.highlightAll()
+    Prism.highlightAll()
   })
 
   return (
