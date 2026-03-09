@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 
 function App() {
 
-  const [code, setCode] = useState(// ✨ Write or paste your code here to review);
+  const [code, setCode] = useState("// ✨ Write or paste your code here to review");
 
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
