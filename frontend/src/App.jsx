@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Footer from "./componenets/Footer";
+import Footer from "./components/Footer.jsx";
 import "prismjs/themes/prism-tomorrow.css";
 import Prism from "prismjs";
 import "prismjs/components/prism-javascript";
