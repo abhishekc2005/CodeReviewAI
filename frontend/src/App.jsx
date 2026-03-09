@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Footer from "./componenets/Footer";
 import "prismjs/themes/prism-tomorrow.css";
 import Prism from "prismjs";
 import "prismjs/components/prism-javascript";
@@ -62,6 +63,16 @@ function App() {
 
   return (
     <main>
+
+      return (
+  <>
+    <main>
+      {/* your editor and review UI */}
+    </main>
+
+    <Footer />
+  </>
+);
 
       <div className="left">
 
