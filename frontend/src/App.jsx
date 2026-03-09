@@ -8,7 +8,7 @@ import './App.css'
 
 async function reviewCode(){
 
-const response = await axios.post("https://codereviewai-backend.onrender.com/ai/review", {
+const response = await axios.post("https://codereviewai-backend.onrender.com/ai/get-review", {
   code
 })
 setReview(response.data.review)
