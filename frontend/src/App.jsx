@@ -9,18 +9,19 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
 
-  const [code, setcode] = useState(`
+  const [code, setCode] = useState(`
                 function sum(){
                  return 1+1
                 }
-                `)
+                `);
 
-  const [review, setreview] = useState('')
+  const [review, setreview] = useState('');
 
 async function reviewCode(){
 
-const response = await axios.post("https://codereviewai-backend.onrender.com/ai/get-review", {code})
-setReview(response.data.review)
+const response = await axios.post("https://codereviewai-backend.onrender.com/ai/get-review", {code});
+  
+setReview(response.data.review);
 }
   
   useEffect(() => {
