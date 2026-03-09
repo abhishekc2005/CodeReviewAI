@@ -20,34 +20,44 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState("javascript");
 
+  
   const reviewCode = async () => {
 
-    if (loading) return;
+  if (loading) return;
 
-    setLoading(true);
-    setReview("⏳ Reviewing your code...");
+  setLoading(true);
+  setReview("⏳ Reviewing your code...");
 
-    try {
+  try {
 
-      const response = await axios.post(
-        "https://codereviewai-backend.onrender.com/ai/get-review",
-        { code, language }
-      );
+    const response = await axios.post(
+      "https://codereviewai-backend.onrender.com/ai/get-review",
+      { code }
+    );
 
+    // Safe check
+    if (response?.data?.review) {
       setReview(response.data.review);
-
-    } catch (error) {
-
-      if (error.response?.status === 429) {
-        setReview("⚠️ Too many requests. Please wait a few seconds.");
-      } else {
-        setReview("⚠️ Failed to fetch review.");
-      }
-
-    } finally {
-      setLoading(false);
+    } else {
+      setReview("⚠️ AI returned empty response.");
     }
-  };
+
+  } catch (error) {
+
+    console.error(error);
+
+    if (error.response?.status === 429) {
+      setReview("⚠️ Too many requests. Please wait 10 seconds.");
+    } else {
+      setReview("⚠️ Server error. Please try again later.");
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
+
+     
 
   const copyReview = () => {
 
