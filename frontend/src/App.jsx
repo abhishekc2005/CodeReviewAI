@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "prismjs/themes/prism-tomorrow.css";
 import Prism from "prismjs";
 import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-c";
 import Editor from "react-simple-code-editor";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
@@ -9,12 +11,13 @@ import "./App.css";
 
 function App() {
 
-  const [code, setCode] = useState(`function sum(){
-  return 1 + 1
-}`);
+  const [code, setCode] = useState(`// ✨ Write or paste your code here to review
+
+`);
 
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState("javascript");
 
   const reviewCode = async () => {
 
@@ -27,19 +30,17 @@ function App() {
 
       const response = await axios.post(
         "https://codereviewai-backend.onrender.com/ai/get-review",
-        { code }
+        { code, language }
       );
 
       setReview(response.data.review);
 
     } catch (error) {
 
-      console.error(error);
-
       if (error.response?.status === 429) {
-        setReview("⚠️ Too many requests. Please wait a few seconds and try again.");
+        setReview("⚠️ Too many requests. Please wait a few seconds.");
       } else {
-        setReview("⚠️ Failed to fetch review. Please try again.");
+        setReview("⚠️ Failed to fetch review.");
       }
 
     } finally {
@@ -47,14 +48,37 @@ function App() {
     }
   };
 
+  const copyReview = () => {
+
+    navigator.clipboard.writeText(review);
+    alert("Review copied!");
+  };
+
   useEffect(() => {
+
     Prism.highlightAll();
-  }, []);
+
+  }, [code]);
 
   return (
     <main>
 
       <div className="left">
+
+        <div className="toolbar">
+
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+
+            <option value="javascript">JavaScript</option>
+            <option value="python">Python</option>
+            <option value="c">C / C++</option>
+
+          </select>
+
+        </div>
 
         <div className="code">
 
@@ -64,42 +88,47 @@ function App() {
             highlight={(code) =>
               Prism.highlight(
                 code,
-                Prism.languages.javascript || Prism.languages.js,
-                "javascript"
+                Prism.languages[language] || Prism.languages.javascript,
+                language
               )
             }
             padding={10}
             style={{
-              fontFamily: '"Fira Code", "Fira Mono", monospace',
+              fontFamily: '"Fira Code", monospace',
               fontSize: 16,
-              border: "1px solid #ddd",
-              borderRadius: "5px",
               height: "100%",
-              width: "100%",
-              background: "#2d2d2d",
-              color: "#fff"
+              width: "100%"
             }}
           />
 
         </div>
 
-        <div
+        <button
           className="review"
           onClick={reviewCode}
-          style={{
-            opacity: loading ? 0.6 : 1,
-            cursor: loading ? "not-allowed" : "pointer"
-          }}
+          disabled={loading}
         >
           {loading ? "Reviewing..." : "Review Code"}
-        </div>
+        </button>
 
       </div>
 
       <div className="right">
 
+        <div className="review-header">
+
+          <h3>AI Review</h3>
+
+          {review && !loading && (
+            <button onClick={copyReview}>
+              Copy
+            </button>
+          )}
+
+        </div>
+
         {loading ? (
-          <div style={{ padding: "20px" }}>⏳ Generating AI review...</div>
+          <div className="loader"></div>
         ) : (
           <ReactMarkdown>{review}</ReactMarkdown>
         )}
