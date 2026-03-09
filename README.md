@@ -1,2 +1,0 @@
-# CodeReviewAI
-code-review-ai
