@@ -18,7 +18,7 @@ function App() {
 
   const reviewCode = async () => {
 
-    if (loading) return; // prevent multiple clicks
+    if (loading) return;
 
     setLoading(true);
     setReview("⏳ Reviewing your code...");
@@ -34,7 +34,7 @@ function App() {
 
     } catch (error) {
 
-      console.error("Error reviewing code:", error);
+      console.error(error);
 
       if (error.response?.status === 429) {
         setReview("⚠️ Too many requests. Please wait a few seconds and try again.");
@@ -49,7 +49,7 @@ function App() {
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [code]);
+  }, []);
 
   return (
     <main>
@@ -62,7 +62,11 @@ function App() {
             value={code}
             onValueChange={(code) => setCode(code)}
             highlight={(code) =>
-              Prism.highlight(code, Prism.languages.javascript, "javascript")
+              Prism.highlight(
+                code,
+                Prism.languages.javascript || Prism.languages.js,
+                "javascript"
+              )
             }
             padding={10}
             style={{
@@ -71,7 +75,9 @@ function App() {
               border: "1px solid #ddd",
               borderRadius: "5px",
               height: "100%",
-              width: "100%"
+              width: "100%",
+              background: "#2d2d2d",
+              color: "#fff"
             }}
           />
 
@@ -91,7 +97,13 @@ function App() {
       </div>
 
       <div className="right">
-        <ReactMarkdown>{review}</ReactMarkdown>
+
+        {loading ? (
+          <div style={{ padding: "20px" }}>⏳ Generating AI review...</div>
+        ) : (
+          <ReactMarkdown>{review}</ReactMarkdown>
+        )}
+
       </div>
 
     </main>
