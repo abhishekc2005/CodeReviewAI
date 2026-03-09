@@ -3,14 +3,17 @@ margin:0;
 background:#0f172a;
 color:white;
 font-family:system-ui;
+}
+
+.app{
 display:flex;
 flex-direction:column;
 min-height:100vh;
 }
 
 main{
-display:flex;
 flex:1;
+display:flex;
 }
 
 .left{
