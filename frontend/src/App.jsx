@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "prismjs/themes/prism-tomorrow.css";
 import Prism from "prismjs";
-import "prismjs/components/prism-javascript";   // important
+import "prismjs/components/prism-javascript";
 import Editor from "react-simple-code-editor";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
@@ -14,9 +14,17 @@ function App() {
 }`);
 
   const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const reviewCode = async () => {
+
+    if (loading) return; // prevent multiple clicks
+
+    setLoading(true);
+    setReview("⏳ Reviewing your code...");
+
     try {
+
       const response = await axios.post(
         "https://codereviewai-backend.onrender.com/ai/get-review",
         { code }
@@ -25,15 +33,23 @@ function App() {
       setReview(response.data.review);
 
     } catch (error) {
+
       console.error("Error reviewing code:", error);
-      setReview("⚠️ Failed to fetch review. Please try again.");
+
+      if (error.response?.status === 429) {
+        setReview("⚠️ Too many requests. Please wait a few seconds and try again.");
+      } else {
+        setReview("⚠️ Failed to fetch review. Please try again.");
+      }
+
+    } finally {
+      setLoading(false);
     }
   };
 
-  // run only once
   useEffect(() => {
     Prism.highlightAll();
-  }, []);
+  }, [code]);
 
   return (
     <main>
@@ -61,8 +77,15 @@ function App() {
 
         </div>
 
-        <div className="review" onClick={reviewCode}>
-          Review
+        <div
+          className="review"
+          onClick={reviewCode}
+          style={{
+            opacity: loading ? 0.6 : 1,
+            cursor: loading ? "not-allowed" : "pointer"
+          }}
+        >
+          {loading ? "Reviewing..." : "Review Code"}
         </div>
 
       </div>
