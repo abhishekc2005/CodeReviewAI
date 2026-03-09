@@ -40,7 +40,7 @@ setReview(response.data.review);
               value={code}
               onValueChange={(code) => setCode(code)}
               highlight={(code) =>
-                Prism.highlight(code, prism.languages.javascript, "javascript")
+                Prism.highlight(code, Prism.languages.javascript, "javascript")
               }
               padding={10}
               style={{
