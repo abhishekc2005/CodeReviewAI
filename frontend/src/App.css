@@ -7,7 +7,7 @@ font-family:system-ui;
 
 main{
 display:flex;
-height:100vh;
+min-height:90vh;
 }
 
 .left{
