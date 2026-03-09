@@ -80,7 +80,6 @@ function App() {
       {/* your editor and review UI */}
     </main>
 
-    <Footer />
   </>
 );
 
@@ -157,6 +156,7 @@ function App() {
       </div>
 
     </main>
+     <Footer />
   );
 }
 
