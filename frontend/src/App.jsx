@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import "prismjs/themes/prism-tomorrow.css"
-import prism from "prismjs"
+import Prism from "prismjs"
 import Editor from "react-simple-code-editor"
 import ReactMarkdown from 'react-markdown'
 import axios from 'axios'
@@ -15,7 +15,7 @@ function App() {
                 }
                 `);
 
-  const [review, setreview] = useState('');
+  const [review, setReview] = useState('');
 
 async function reviewCode(){
 
@@ -40,7 +40,7 @@ setReview(response.data.review);
               value={code}
               onValueChange={(code) => setCode(code)}
               highlight={(code) =>
-                prism.highlight(code, prism.languages.javascript, "javascript")
+                Prism.highlight(code, prism.languages.javascript, "javascript")
               }
               padding={10}
               style={{
