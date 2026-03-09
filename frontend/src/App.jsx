@@ -6,14 +6,6 @@ import ReactMarkdown from 'react-markdown'
 import axios from 'axios'
 import './App.css'
 
-async function reviewCode(){
-
-const response = await axios.post("https://codereviewai-backend.onrender.com/ai/get-review", {
-  code
-})
-setReview(response.data.review)
-
-}
 function App() {
   const [count, setCount] = useState(0)
 
@@ -25,6 +17,15 @@ function App() {
 
   const [review, setreview] = useState('')
 
+async function reviewCode(){
+
+const response = await axios.post("https://codereviewai-backend.onrender.com/ai/get-review", {
+  code
+})
+setReview(response.data.review)
+
+}
+  
   useEffect(() => {
     prism.highlightAll()
   })
