@@ -28,9 +28,6 @@ function App() {
 
     try {
 
-      // small delay to prevent spamming
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
       const response = await axios.post(
         "https://codereviewai-backend.onrender.com/ai/get-review",
         { code }
@@ -61,9 +58,13 @@ function App() {
       }
 
     } finally {
-      setLoading(false);
-    }
 
+      // cooldown before enabling button again
+      setTimeout(() => {
+        setLoading(false);
+      }, 5000);
+
+    }
   };
 
   return (
