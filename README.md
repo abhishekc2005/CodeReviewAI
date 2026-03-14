@@ -1,40 +1,46 @@
-# AI Code Reviewer
+# 🚀 CodeReviewAI
 
-An AI powered code review web application built using React, Node.js and Gemini API.
+**CodeReviewAI** is an AI-powered web application that reviews your code and provides structured feedback similar to a professional software engineer.
 
-## Features
+Developers can paste their code and instantly receive insights on code quality, potential bugs, performance improvements, security considerations, and best practices.
 
-- AI powered code review
-- Syntax highlighted code editor
-- Language selection (JavaScript, Python, C++)
-- Copy review button
-- Loading indicator
-- Markdown formatted responses
+🔗 **Live Demo**  
+https://codereviewai-woad.vercel.app
 
-## Tech Stack
+💻 **GitHub Repository**  
+https://github.com/abhishekc2005/CodeReviewAI
 
-Frontend
+---
+
+## ✨ Features
+
+- 🤖 AI-powered code review
+- ⚡ Instant feedback on pasted code
+- 🧠 Code quality and best practice suggestions
+- 🔍 Bug and issue detection
+- 📈 Performance improvement recommendations
+- 🛡 Security awareness suggestions
+- 📝 Markdown-formatted review output
+- 💻 Clean and developer-friendly UI
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
 - React
-- PrismJS
-- React Simple Code Editor
+- PrismJS (syntax highlighting)
+- React Markdown
+- CSS
 
-Backend
+**Backend**
 - Node.js
-- Express
+- Express.js
+
+**AI Engine**
 - Groq API
+- LLaMA Models
 
-## Deployment
-
-Frontend: Vercel  
-Backend: Render
-
-## Usage
-
-1. Paste your code into the editor
-2. Select programming language
-3. Click *Review Code*
-4. AI will generate suggestions
-
-## Author
-
-Abhishek Choudhary
+**Deployment**
+- Vercel (Frontend)
+- Render (Backend)
