@@ -21,7 +21,7 @@ Frontend
 Backend
 - Node.js
 - Express
-- Gemini API
+- Groq API
 
 ## Deployment
 
