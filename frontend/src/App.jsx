@@ -71,9 +71,22 @@ function App() {
   return (
     <div className="app">
 
+      <header className="app-header">
+        <div className="app-header-brand">
+          <span className="app-header-logo">⚡</span>
+          <span className="app-header-title">CodeReviewAI</span>
+        </div>
+        <span className="app-header-badge">AI Powered</span>
+      </header>
+
       <main>
 
         <div className="left">
+
+          <div className="panel-label">
+            <span className="panel-label-dot"></span>
+            Code Editor
+          </div>
 
           <div className="code">
 
@@ -87,11 +100,12 @@ function App() {
                   "javascript"
                 )
               }
-              padding={10}
+              padding={16}
               style={{
                 fontFamily: '"Fira Code", monospace',
-                fontSize: 16,
-                minHeight: "300px"
+                fontSize: 15,
+                minHeight: "220px",
+                lineHeight: 1.7,
               }}
             />
 
@@ -109,11 +123,16 @@ function App() {
 
         <div className="right">
 
-          <h3>AI Review</h3>
+          <div className="right-header">
+            <span className="right-header-icon">✨</span>
+            <h3>AI Review</h3>
+          </div>
 
-          <ReactMarkdown>
-            {review}
-          </ReactMarkdown>
+          <div className="review-content">
+            <ReactMarkdown>
+              {review}
+            </ReactMarkdown>
+          </div>
 
         </div>
 
