@@ -5,6 +5,8 @@ import "prismjs/components/prism-javascript";
 import Editor from "react-simple-code-editor";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import "./App.css";
 import Footer from "./components/Footer";
 
@@ -13,6 +15,13 @@ function App() {
   const [code, setCode] = useState("// ✨ Write or paste your code here to review");
   const [review, setReview] = useState("Your AI code review will appear here...");
   const [loading, setLoading] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
 
   const reviewCode = async () => {
 
@@ -31,7 +40,8 @@ function App() {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await axios.post(
         `${API_URL}/ai/get-review`,
-        { code }
+        { code },
+        { withCredentials: true }
       );
 
       const aiReview = response?.data?.review;
@@ -46,8 +56,18 @@ function App() {
 
       console.error("Review API Error:", error);
 
-      if (error.response?.status === 429) {
-        setReview("⚠️ Too many requests. Please wait a few seconds.");
+      if (error.response?.status === 401) {
+        setReview("⚠️ Your session has expired. Please login again.");
+        // Refresh auth state and redirect to login
+        setTimeout(() => {
+          logout();
+          navigate("/login", { replace: true });
+        }, 2000);
+      }
+
+      else if (error.response?.status === 429) {
+        const msg = error.response?.data?.error || "Too many requests. Please wait.";
+        setReview(`⚠️ ${msg}`);
       }
 
       else if (error.response?.status === 500) {
@@ -76,7 +96,24 @@ function App() {
           <span className="app-header-logo">⚡</span>
           <span className="app-header-title">CodeReviewAI</span>
         </div>
-        <span className="app-header-badge">AI Powered</span>
+        <div className="app-header-user">
+          {user && (
+            <>
+              <span className="app-header-username">
+                {user.name}
+              </span>
+              <button
+                className="logout-btn"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
+          {!user && (
+            <span className="app-header-badge">AI Powered</span>
+          )}
+        </div>
       </header>
 
       <main>

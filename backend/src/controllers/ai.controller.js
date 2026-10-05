@@ -1,4 +1,5 @@
 const aiService = require("../services/ai.service");
+const AIUsage = require("../models/AIUsage");
 
 module.exports.getReview = async (req, res) => {
   try {
@@ -11,10 +12,36 @@ module.exports.getReview = async (req, res) => {
       });
     }
 
+    // ─── AI Daily Rate Limit ───────────────────────────
+    const AI_DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT) || 10;
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+    // Atomically find or create today's usage document
+    let usage = await AIUsage.findOneAndUpdate(
+      { userId: req.userId, date: today },
+      { $setOnInsert: { userId: req.userId, date: today, count: 0 } },
+      { upsert: true, new: true }
+    );
+
+    if (usage.count >= AI_DAILY_LIMIT) {
+      return res.status(429).json({
+        success: false,
+        error: "Daily AI review limit reached. Please try again tomorrow."
+      });
+    }
+
+    // ─── Existing AI Review Logic ──────────────────────
+
     console.log("📥 AI Review request received");
     console.log("🧠 Code length:", code.length);
 
     const review = await aiService(code);
+
+    // Increment usage count AFTER successful AI response
+    await AIUsage.findOneAndUpdate(
+      { userId: req.userId, date: today },
+      { $inc: { count: 1 } }
+    );
 
     return res.status(200).json({
       success: true,
