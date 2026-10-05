@@ -10,17 +10,30 @@ const app = express();
 // ─── CORS Configuration ─────────────────────────────────
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+  "https://codereviewai-pi.vercel.app" // Your live Vercel domain
+];
+
+if (process.env.FRONTEND_URL) {
+  // Strip trailing slashes to prevent matching errors
+  allowedOrigins.push(process.env.FRONTEND_URL.replace(/\/$/, ""));
+}
 
 app.use(
   cors({
     origin: function (origin, callback) {
       // Allow requests with no origin (mobile apps, curl, etc.)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+
+      const normalizedOrigin = origin.replace(/\/$/, "");
+
+      if (
+        allowedOrigins.includes(normalizedOrigin) || 
+        normalizedOrigin.endsWith(".vercel.app") // Safely allow Vercel preview branches
+      ) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        // Pass false instead of an Error so the browser blocks it cleanly without crashing the backend
+        callback(null, false);
       }
     },
     credentials: true,
