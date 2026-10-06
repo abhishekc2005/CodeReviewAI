@@ -1,14 +1,43 @@
 const aiService = require("../services/ai.service");
 const AIUsage = require("../models/AIUsage");
 
+const SUPPORTED_LANGUAGES = [
+  "javascript",
+  "typescript",
+  "python",
+  "java",
+  "c",
+  "cpp",
+  "csharp",
+  "go",
+  "rust",
+  "php",
+  "ruby",
+  "kotlin",
+  "swift",
+  "sql",
+  "html",
+  "css",
+  "dart",
+  "bash"
+];
+
 module.exports.getReview = async (req, res) => {
   try {
     const code = req?.body?.code?.trim();
+    const language = req?.body?.language?.trim()?.toLowerCase();
 
     if (!code) {
       return res.status(400).json({
         success: false,
         error: "Code is required"
+      });
+    }
+
+    if (!language || !SUPPORTED_LANGUAGES.includes(language)) {
+      return res.status(400).json({
+        success: false,
+        error: "Unsupported programming language"
       });
     }
 
@@ -34,8 +63,9 @@ module.exports.getReview = async (req, res) => {
 
     console.log("📥 AI Review request received");
     console.log("🧠 Code length:", code.length);
+    console.log("🗣️ Language:", language);
 
-    const review = await aiService(code);
+    const review = await aiService(code, language);
 
     // Increment usage count AFTER successful AI response
     await AIUsage.findOneAndUpdate(

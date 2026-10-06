@@ -4,9 +4,11 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY
 });
 
-async function generateContent(prompt) {
+async function generateContent(code, language) {
   try {
     console.log("🚀 Sending request to Groq...");
+
+    const prompt = `Programming Language:\n${language}\n\nCode:\n${code}\n\nReview this code as a senior software engineer.\n\nAnalyze:\n1. Correctness\n2. Bugs\n3. Edge cases\n4. Performance\n5. Security\n6. Maintainability\n7. Readability\n8. Language-specific best practices\n\nProvide concise and actionable feedback.`;
 
     const response = await groq.chat.completions.create({
       model: "openai/gpt-oss-20b",
