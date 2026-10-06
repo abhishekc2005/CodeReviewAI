@@ -24,7 +24,7 @@ function LoginPage() {
     setLoading(true);
     try {
       await login(identifier.trim(), password);
-      navigate("/", { replace: true });
+      navigate("/app", { replace: true });
     } catch (err) {
       const msg =
         err.response?.data?.error || "Login failed. Please try again.";

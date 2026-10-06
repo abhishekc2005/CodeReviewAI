@@ -48,7 +48,7 @@ function SignupPage() {
     setLoading(true);
     try {
       await signup(name.trim(), email.trim(), mobile.trim(), password);
-      navigate("/", { replace: true });
+      navigate("/app", { replace: true });
     } catch (err) {
       const msg =
         err.response?.data?.error || "Signup failed. Please try again.";

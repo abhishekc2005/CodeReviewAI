@@ -20,7 +20,7 @@ function App() {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const reviewCode = async () => {
@@ -61,7 +61,7 @@ function App() {
         // Refresh auth state and redirect to login
         setTimeout(() => {
           logout();
-          navigate("/login", { replace: true });
+          navigate("/", { replace: true });
         }, 2000);
       }
 
