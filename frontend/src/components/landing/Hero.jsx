@@ -15,13 +15,11 @@ function Hero({ user }) {
           </div>
 
           <h1 className="landing-hero-title">
-            <span className="landing-hero-title-accent">AI-Powered</span> Code
-            Reviews for Better Code
+            Review Code. <span className="landing-hero-title-accent">Fix Issues.</span> Understand Your Repository.
           </h1>
 
           <p className="landing-hero-desc">
-            Analyze your code for bugs, performance issues, security risks,
-            maintainability, and best practices — in seconds.
+            AI-powered code reviews and GitHub repository analysis that help developers find issues, understand their code, and generate improved solutions.
           </p>
 
           <div className="landing-hero-actions">
@@ -32,11 +30,11 @@ function Hero({ user }) {
             ) : (
               <>
                 <Link to="/signup" className="landing-hero-btn-primary">
-                  Get Started →
+                  Start Reviewing →
                 </Link>
-                <Link to="/login" className="landing-hero-btn-secondary">
-                  Login
-                </Link>
+                <a href="#github-preview" className="landing-hero-btn-secondary">
+                  Explore GitHub Review
+                </a>
               </>
             )}
           </div>

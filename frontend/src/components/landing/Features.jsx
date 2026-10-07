@@ -1,33 +1,33 @@
 const features = [
   {
     icon: "🧠",
-    title: "AI-Powered Code Analysis",
-    desc: "Analyze source code using LLM-powered contextual review that understands your code's intent and structure.",
+    title: "AI Code Review",
+    desc: "Get actionable feedback on bugs, security, performance, code quality, and best practices.",
   },
   {
-    icon: "🐛",
-    title: "Bug Detection",
-    desc: "Identify potential bugs, incorrect logic, and edge cases before they reach production.",
+    icon: "🌐",
+    title: "Multi-Language Support",
+    desc: "Review code across JavaScript, TypeScript, Python, Java, C++, C, Go, Rust and more.",
   },
   {
-    icon: "🔒",
-    title: "Security Analysis",
-    desc: "Highlight potential security vulnerabilities and risky patterns in your codebase.",
+    icon: "📦",
+    title: "GitHub Repository Review",
+    desc: "Analyze a public GitHub repository and get an AI-assisted overview of its architecture, security, and performance.",
   },
   {
-    icon: "⚡",
-    title: "Performance Insights",
-    desc: "Identify inefficient code patterns and get suggestions for performance improvements.",
+    icon: "🔧",
+    title: "Fix This Code",
+    desc: "Turn review findings into improved code with a dedicated AI fix action.",
   },
   {
-    icon: "🏗️",
-    title: "Maintainable Code",
-    desc: "Get suggestions for readability, structure, and maintainability to keep your codebase clean.",
+    icon: "⚖️",
+    title: "Before vs After",
+    desc: "Compare your original code with the AI-generated improved version side by side.",
   },
   {
     icon: "📋",
-    title: "Actionable Feedback",
-    desc: "Receive structured, developer-friendly feedback that you can immediately apply to improve your code.",
+    title: "Copy Fixed Code",
+    desc: "Copy the improved code instantly and continue developing.",
   },
 ];
 

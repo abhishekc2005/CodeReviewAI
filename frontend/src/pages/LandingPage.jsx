@@ -4,6 +4,7 @@ import Hero from "../components/landing/Hero";
 import Features from "../components/landing/Features";
 import HowItWorks from "../components/landing/HowItWorks";
 import ReviewPreview from "../components/landing/ReviewPreview";
+import GithubPreview from "../components/landing/GithubPreview";
 import TrustSection from "../components/landing/TrustSection";
 import FinalCTA from "../components/landing/FinalCTA";
 import LandingFooter from "../components/landing/LandingFooter";
@@ -28,6 +29,7 @@ function LandingPage() {
       <Features />
       <HowItWorks />
       <ReviewPreview />
+      <GithubPreview />
       <TrustSection />
       <FinalCTA user={user} />
       <LandingFooter />

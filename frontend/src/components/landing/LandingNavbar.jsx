@@ -44,8 +44,8 @@ function LandingNavbar({ user }) {
               </a>
             </li>
             <li>
-              <a href="#preview" className="landing-nav-link" onClick={(e) => handleNavClick(e, "preview")}>
-                About
+              <a href="#github-preview" className="landing-nav-link" onClick={(e) => handleNavClick(e, "github-preview")}>
+                GitHub Review
               </a>
             </li>
           </ul>
@@ -95,8 +95,8 @@ function LandingNavbar({ user }) {
             </a>
           </li>
           <li>
-            <a href="#preview" className="landing-mobile-menu-link" onClick={(e) => handleNavClick(e, "preview")}>
-              About
+            <a href="#github-preview" className="landing-mobile-menu-link" onClick={(e) => handleNavClick(e, "github-preview")}>
+              GitHub Review
             </a>
           </li>
         </ul>

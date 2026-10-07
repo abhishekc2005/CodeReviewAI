@@ -5,10 +5,9 @@ function FinalCTA({ user }) {
     <section className="landing-section landing-cta">
       <div className="landing-cta-bg" aria-hidden="true"></div>
       <div className="landing-cta-inner">
-        <h2 className="landing-cta-title">Ready to write better code?</h2>
+        <h2 className="landing-cta-title">Ready to Write Better Code?</h2>
         <p className="landing-cta-desc">
-          Start reviewing your code with AI and get actionable feedback in
-          seconds.
+          Review your code, analyze your repository, fix issues, and ship with confidence.
         </p>
 
         {user ? (
@@ -18,7 +17,7 @@ function FinalCTA({ user }) {
         ) : (
           <>
             <Link to="/signup" className="landing-cta-btn">
-              Start Reviewing for Free →
+              Start Reviewing →
             </Link>
             <p className="landing-cta-login">
               Already have an account?{" "}
