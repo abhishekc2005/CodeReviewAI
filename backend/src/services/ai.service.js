@@ -56,5 +56,61 @@ async function generateContent(code, language) {
     throw error;
   }
 }
+async function fixContent(code, language, reviewContext) {
+  try {
+    console.log("🚀 Sending fix request to Groq...");
 
-module.exports = generateContent;
+    // The AI must return ONLY the code, no markdown fences, no explanations.
+    let prompt = `Programming Language:\n${language}\n\nCode to fix:\n${code}\n\n`;
+    if (reviewContext) {
+      prompt += `Previous Review Context:\n${reviewContext}\n\n`;
+    }
+    prompt += `Fix the actual bugs and issues in the code above. Improve correctness, security, and performance where appropriate. Preserve the intended functionality, behavior, and programming language. Do NOT rewrite unnecessarily. 
+
+CRITICAL: Return ONLY the raw corrected code. Do NOT wrap the code in markdown fences (like \`\`\`javascript). Do NOT include any explanations, greetings, or text other than the code itself.`;
+
+    const response = await groq.chat.completions.create({
+      model: "openai/gpt-oss-20b",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert code fixer. You strictly follow instructions and return ONLY raw code without any markdown formatting or explanations."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.1, // Lower temperature for more deterministic fixes
+      include_reasoning: false
+    });
+
+    console.log("✅ Groq fix response received");
+    const message = response?.choices?.[0]?.message;
+    let fixedCode = message?.content?.trim();
+
+    if (!fixedCode) {
+      throw new Error("EMPTY_AI_RESPONSE");
+    }
+
+    // Strip markdown fences just in case the AI ignores the prompt
+    if (fixedCode.startsWith('```')) {
+      const lines = fixedCode.split('\n');
+      if (lines[0].startsWith('```')) lines.shift();
+      if (lines[lines.length - 1].startsWith('```')) lines.pop();
+      fixedCode = lines.join('\n').trim();
+    }
+
+    console.log("✅ AI fix generated successfully");
+    return fixedCode;
+
+  } catch (error) {
+    console.error("🔥 GROQ ERROR (Fix):");
+    console.error("Status:", error?.status);
+    console.error("Code:", error?.code);
+    console.error("Message:", error?.message);
+    throw error;
+  }
+}
+
+module.exports = { generateContent, fixContent };

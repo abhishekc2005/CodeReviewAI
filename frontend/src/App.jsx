@@ -76,6 +76,8 @@ function App() {
   const [review, setReview] = useState("Your AI code review will appear here...");
   const [loading, setLoading] = useState(false);
   const [reviewLabel, setReviewLabel] = useState(""); // label shown in right panel header
+  const [fixedCode, setFixedCode] = useState(null);
+  const [fixing, setFixing] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -97,6 +99,7 @@ function App() {
     setLoading(true);
     setReview("⏳ Reviewing your code with AI...");
     setReviewLabel(LANGUAGES.find(l => l.id === language)?.name || language);
+    setFixedCode(null); // Clear previous fixed code when starting a new review
 
     try {
       
@@ -146,6 +149,40 @@ function App() {
         setLoading(false);
       }, 5000);
 
+    }
+  };
+
+  // ─── Fix Code Handler (new) ─────────────────────────
+  const fixCode = async () => {
+    if (fixing || loading) return;
+    
+    setFixing(true);
+    const prevReview = review; // Store current review to restore if needed
+    setReview("⏳ Generating fixed code...");
+    setFixedCode(null);
+
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
+      const response = await axios.post(
+        `${API_URL}/ai/fix-code`,
+        { code, language, reviewContext: prevReview !== "Your AI code review will appear here..." ? prevReview : "" },
+        { withCredentials: true }
+      );
+
+      const aiFixedCode = response?.data?.fixedCode;
+
+      if (aiFixedCode) {
+        setFixedCode(aiFixedCode);
+        setReview(prevReview); // Restore review
+      } else {
+        setReview("⚠️ AI returned no fixed code.\n\n" + prevReview);
+      }
+    } catch (error) {
+      console.error("Fix API Error:", error);
+      const msg = error.response?.data?.error || "Error generating fix. Please try again.";
+      setReview(`⚠️ ${msg}\n\n` + prevReview);
+    } finally {
+      setFixing(false);
     }
   };
 
@@ -391,11 +428,84 @@ function App() {
             <ReactMarkdown>
               {review}
             </ReactMarkdown>
+
+            {/* Render Fix button if we are in code mode and a valid review exists */}
+            {reviewMode === "code" && 
+             review && 
+             review !== "Your AI code review will appear here..." && 
+             !review.startsWith("⏳") && 
+             !review.startsWith("⚠️") && (
+              <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--color-border)', textAlign: 'center' }}>
+                <button 
+                  className="fix-btn" 
+                  onClick={fixCode} 
+                  disabled={fixing}
+                >
+                  {fixing ? "✨ Fixing Code..." : "🔧 Fix This Code"}
+                </button>
+              </div>
+            )}
           </div>
 
         </div>
 
       </main>
+
+      {/* ── Before vs After Section ── */}
+      {fixedCode && (
+        <section className="diff-section">
+          <div className="diff-header">
+            <h3>✨ Fixed Code Comparison</h3>
+            <button 
+              className="copy-btn" 
+              onClick={() => {
+                navigator.clipboard.writeText(fixedCode);
+                alert("Fixed code copied to clipboard!");
+              }}
+            >
+              📋 Copy Fixed Code
+            </button>
+          </div>
+          
+          <div className="diff-container">
+            <div className="diff-pane before-pane">
+              <div className="diff-pane-header">Before</div>
+              <div className="diff-code">
+                <Editor
+                  value={code}
+                  onValueChange={() => {}}
+                  highlight={(c) => {
+                    const prismLangId = language === "html" ? "markup" : language;
+                    const grammar = Prism.languages[prismLangId];
+                    return grammar ? Prism.highlight(c, grammar, prismLangId) : c;
+                  }}
+                  padding={16}
+                  style={{ fontFamily: '"Fira Code", monospace', fontSize: 14, minHeight: "200px" }}
+                  disabled={true}
+                />
+              </div>
+            </div>
+            
+            <div className="diff-pane after-pane">
+              <div className="diff-pane-header">After</div>
+              <div className="diff-code">
+                <Editor
+                  value={fixedCode}
+                  onValueChange={() => {}}
+                  highlight={(c) => {
+                    const prismLangId = language === "html" ? "markup" : language;
+                    const grammar = Prism.languages[prismLangId];
+                    return grammar ? Prism.highlight(c, grammar, prismLangId) : c;
+                  }}
+                  padding={16}
+                  style={{ fontFamily: '"Fira Code", monospace', fontSize: 14, minHeight: "200px" }}
+                  disabled={true}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <Footer />
 

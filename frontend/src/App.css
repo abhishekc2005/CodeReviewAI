@@ -477,3 +477,140 @@ main {
     font-size: 0.68rem;
   }
 }
+
+/* ===== FIX CODE FEATURE ===== */
+.fix-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: #fff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-base);
+  box-shadow: var(--shadow-md);
+}
+
+.fix-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.fix-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.diff-section {
+  margin: 0 16px 24px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .diff-section {
+    margin: 0 20px 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .diff-section {
+    margin: 0 32px 32px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .diff-section {
+    max-width: 1536px; /* 1600 - 64 */
+    margin: 0 auto 32px;
+  }
+}
+
+.diff-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.diff-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+}
+
+.copy-btn {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background var(--transition-fast);
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.diff-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 900px) {
+  .diff-container {
+    flex-direction: row;
+  }
+}
+
+.diff-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-editor);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.diff-pane-header {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.before-pane .diff-pane-header {
+  color: #ef4444; /* red-500 */
+}
+
+.after-pane .diff-pane-header {
+  color: #10b981; /* emerald-500 */
+}
+
+.diff-code {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.diff-code textarea {
+  pointer-events: none; /* Make read-only */
+}

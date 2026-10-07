@@ -7,4 +7,7 @@ const router = express.Router();
 // AI review route — protected by authentication
 router.post("/get-review", protect, aiController.getReview);
 
+// AI fix code route — protected by authentication
+router.post("/fix-code", protect, aiController.fixCode);
+
 module.exports = router;
