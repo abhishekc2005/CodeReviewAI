@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 
 const aiRoutes = require("./routes/ai.routes");
 const authRoutes = require("./routes/auth.routes");
+const repoRoutes = require("./routes/repo.routes");
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.get("/", (req, res) => {
 // ─── Routes ──────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/ai", aiRoutes);
+app.use("/api/repo", repoRoutes);
 
 // ─── Global Error Handler ────────────────────────────────
 app.use((err, req, res, next) => {
