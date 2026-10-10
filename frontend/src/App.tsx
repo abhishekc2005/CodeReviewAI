@@ -72,12 +72,27 @@ function App() {
   const [code, setCode] = useState("// ✨ Write or paste your code here to review");
   const [language, setLanguage] = useState("javascript");
   const [reviewMode, setReviewMode] = useState("code"); // "code" | "repo"
+<<<<<<< HEAD:frontend/src/App.tsx
   const [repoUrl, setRepoUrl] = useState("");
   const [review, setReview] = useState("Your AI code review will appear here...");
   const [loading, setLoading] = useState(false);
   const [reviewLabel, setReviewLabel] = useState(""); // label shown in right panel header
   const [fixedCode, setFixedCode] = useState<string | null>(null);
+=======
+  
+  // Code Review State
+  const [codeReview, setCodeReview] = useState("Your AI code review will appear here...");
+  const [codeReviewLoading, setCodeReviewLoading] = useState(false);
+  const [codeReviewLabel, setCodeReviewLabel] = useState("");
+  const [fixedCode, setFixedCode] = useState(null);
+>>>>>>> 993f44c (fix: responsive layout and review mode state isolation):frontend/src/App.jsx
   const [fixing, setFixing] = useState(false);
+
+  // Repo Review State
+  const [repoUrl, setRepoUrl] = useState("");
+  const [repoReview, setRepoReview] = useState("Your AI repository review will appear here...");
+  const [repoReviewLoading, setRepoReviewLoading] = useState(false);
+  const [repoReviewLabel, setRepoReviewLabel] = useState("");
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -89,16 +104,16 @@ function App() {
   // ─── Code Review Handler (existing) ─────────────────
   const reviewCode = async () => {
 
-    if (loading) return;
+    if (codeReviewLoading) return;
 
     if (!code || code.trim().length < 5) {
-      setReview("⚠️ Please write or paste some code first.");
+      setCodeReview("⚠️ Please write or paste some code first.");
       return;
     }
 
-    setLoading(true);
-    setReview("⏳ Reviewing your code with AI...");
-    setReviewLabel(LANGUAGES.find(l => l.id === language)?.name || language);
+    setCodeReviewLoading(true);
+    setCodeReview("⏳ Reviewing your code with AI...");
+    setCodeReviewLabel(LANGUAGES.find(l => l.id === language)?.name || language);
     setFixedCode(null); // Clear previous fixed code when starting a new review
 
     try {
@@ -113,9 +128,9 @@ function App() {
       const aiReview = response?.data?.review;
 
       if (aiReview) {
-        setReview(aiReview);
+        setCodeReview(aiReview);
       } else {
-        setReview("⚠️ AI returned no review.");
+        setCodeReview("⚠️ AI returned no review.");
       }
 
     } catch (error: any) {
@@ -123,7 +138,7 @@ function App() {
       console.error("Review API Error:", error);
 
       if (error.response?.status === 401) {
-        setReview("⚠️ Your session has expired. Please login again.");
+        setCodeReview("⚠️ Your session has expired. Please login again.");
         setTimeout(() => {
           logout();
           navigate("/", { replace: true });
@@ -132,21 +147,21 @@ function App() {
 
       else if (error.response?.status === 429) {
         const msg = error.response?.data?.error || "Too many requests. Please wait.";
-        setReview(`⚠️ ${msg}`);
+        setCodeReview(`⚠️ ${msg}`);
       }
 
       else if (error.response?.status === 500) {
-        setReview("⚠️ Server error. AI service temporarily unavailable.");
+        setCodeReview("⚠️ Server error. AI service temporarily unavailable.");
       }
 
       else {
-        setReview("⚠️ Network error. Check your connection.");
+        setCodeReview("⚠️ Network error. Check your connection.");
       }
 
     } finally {
 
       setTimeout(() => {
-        setLoading(false);
+        setCodeReviewLoading(false);
       }, 5000);
 
     }
@@ -154,11 +169,11 @@ function App() {
 
   // ─── Fix Code Handler (new) ─────────────────────────
   const fixCode = async () => {
-    if (fixing || loading) return;
+    if (fixing || codeReviewLoading) return;
     
     setFixing(true);
-    const prevReview = review; // Store current review to restore if needed
-    setReview("⏳ Generating fixed code...");
+    const prevReview = codeReview; // Store current review to restore if needed
+    setCodeReview("⏳ Generating fixed code...");
     setFixedCode(null);
 
     try {
@@ -173,14 +188,14 @@ function App() {
 
       if (aiFixedCode) {
         setFixedCode(aiFixedCode);
-        setReview(prevReview); // Restore review
+        setCodeReview(prevReview); // Restore review
       } else {
-        setReview("⚠️ AI returned no fixed code.\n\n" + prevReview);
+        setCodeReview("⚠️ AI returned no fixed code.\n\n" + prevReview);
       }
     } catch (error: any) {
       console.error("Fix API Error:", error);
       const msg = error.response?.data?.error || "Error generating fix. Please try again.";
-      setReview(`⚠️ ${msg}\n\n` + prevReview);
+      setCodeReview(`⚠️ ${msg}\n\n` + prevReview);
     } finally {
       setFixing(false);
     }
@@ -188,23 +203,23 @@ function App() {
 
   // ─── Repository Review Handler (new) ────────────────
   const reviewRepo = async () => {
-    if (loading) return;
+    if (repoReviewLoading) return;
 
     const trimmedUrl = repoUrl.trim();
     if (!trimmedUrl) {
-      setReview("⚠️ Please enter a GitHub repository URL.");
+      setRepoReview("⚠️ Please enter a GitHub repository URL.");
       return;
     }
 
     // Basic client-side validation
     if (!/^https:\/\/github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+\/?$/.test(trimmedUrl.replace(/\/+$/, ""))) {
-      setReview("⚠️ Please enter a valid public GitHub repository URL.\n\nExample: https://github.com/user/repository");
+      setRepoReview("⚠️ Please enter a valid public GitHub repository URL.\n\nExample: https://github.com/user/repository");
       return;
     }
 
-    setLoading(true);
-    setReview("⏳ Analyzing repository...\n\nInspecting project structure, technologies, and code quality...");
-    setReviewLabel("GitHub Repository");
+    setRepoReviewLoading(true);
+    setRepoReview("⏳ Analyzing repository...\n\nInspecting project structure, technologies, and code quality...");
+    setRepoReviewLabel("GitHub Repository");
 
     try {
       const API_URL = import.meta.env.VITE_API_URL;
@@ -217,9 +232,9 @@ function App() {
       const aiReview = response?.data?.review;
 
       if (aiReview) {
-        setReview(aiReview);
+        setRepoReview(aiReview);
       } else {
-        setReview("⚠️ AI returned no review.");
+        setRepoReview("⚠️ AI returned no review.");
       }
 
     } catch (error: any) {
@@ -229,7 +244,7 @@ function App() {
       const msg = error.response?.data?.message || error.response?.data?.error;
 
       if (status === 401) {
-        setReview("⚠️ Your session has expired. Please login again.");
+        setRepoReview("⚠️ Your session has expired. Please login again.");
         setTimeout(() => {
           logout();
           navigate("/", { replace: true });
@@ -237,32 +252,32 @@ function App() {
       }
 
       else if (status === 400) {
-        setReview(`⚠️ ${msg || "Invalid repository URL."}`);
+        setRepoReview(`⚠️ ${msg || "Invalid repository URL."}`);
       }
 
       else if (status === 404) {
-        setReview(`⚠️ ${msg || "Repository not found or it is private. Please provide a public GitHub repository."}`);
+        setRepoReview(`⚠️ ${msg || "Repository not found or it is private. Please provide a public GitHub repository."}`);
       }
 
       else if (status === 429) {
-        setReview(`⚠️ ${msg || "Rate limit reached. Please try again later."}`);
+        setRepoReview(`⚠️ ${msg || "Rate limit reached. Please try again later."}`);
       }
 
       else if (status >= 500) {
-        setReview(`⚠️ ${msg || "Server error. AI service temporarily unavailable."}`);
+        setRepoReview(`⚠️ ${msg || "Server error. AI service temporarily unavailable."}`);
       }
 
       else if (error.code === "ECONNABORTED") {
-        setReview("⚠️ Request timed out. The repository may be too large. Please try a smaller repository.");
+        setRepoReview("⚠️ Request timed out. The repository may be too large. Please try a smaller repository.");
       }
 
       else {
-        setReview("⚠️ Network error. Check your connection.");
+        setRepoReview("⚠️ Network error. Check your connection.");
       }
 
     } finally {
       setTimeout(() => {
-        setLoading(false);
+        setRepoReviewLoading(false);
       }, 5000);
     }
   };
@@ -371,9 +386,9 @@ function App() {
               <button
                 className="review"
                 onClick={reviewCode}
-                disabled={loading}
+                disabled={codeReviewLoading}
               >
-                {loading ? "🔄 Reviewing..." : "🚀 Review Code"}
+                {codeReviewLoading ? "🔄 Reviewing..." : "🚀 Review Code"}
               </button>
             </>
           )}
@@ -391,7 +406,7 @@ function App() {
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") reviewRepo(); }}
-                  disabled={loading}
+                  disabled={repoReviewLoading}
                 />
               </div>
               <p className="repo-helper-text">
@@ -401,9 +416,9 @@ function App() {
               <button
                 className="review"
                 onClick={reviewRepo}
-                disabled={loading}
+                disabled={repoReviewLoading}
               >
-                {loading ? "🔄 Analyzing Repository..." : "📦 Review Repository"}
+                {repoReviewLoading ? "🔄 Analyzing Repository..." : "📦 Review Repository"}
               </button>
             </>
           )}
@@ -417,24 +432,24 @@ function App() {
               <span className="right-header-icon">✨</span>
               <h3>AI Review</h3>
             </div>
-            {reviewLabel && (
+            {((reviewMode === "code" && codeReviewLabel) || (reviewMode === "repo" && repoReviewLabel)) && (
               <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '12px' }}>
-                {reviewMode === "code" ? `Reviewed as ${reviewLabel}` : `📦 ${reviewLabel}`}
+                {reviewMode === "code" ? `Reviewed as ${codeReviewLabel}` : `📦 ${repoReviewLabel}`}
               </span>
             )}
           </div>
 
           <div className="review-content">
             <ReactMarkdown>
-              {review}
+              {reviewMode === "code" ? codeReview : repoReview}
             </ReactMarkdown>
 
             {/* Render Fix button if we are in code mode and a valid review exists */}
             {reviewMode === "code" && 
-             review && 
-             review !== "Your AI code review will appear here..." && 
-             !review.startsWith("⏳") && 
-             !review.startsWith("⚠️") && (
+             codeReview && 
+             codeReview !== "Your AI code review will appear here..." && 
+             !codeReview.startsWith("⏳") && 
+             !codeReview.startsWith("⚠️") && (
               <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--color-border)', textAlign: 'center' }}>
                 <button 
                   className="fix-btn" 
@@ -452,7 +467,7 @@ function App() {
       </main>
 
       {/* ── Before vs After Section ── */}
-      {fixedCode && (
+      {reviewMode === "code" && fixedCode && (
         <section className="diff-section">
           <div className="diff-header">
             <h3>✨ Fixed Code Comparison</h3>
