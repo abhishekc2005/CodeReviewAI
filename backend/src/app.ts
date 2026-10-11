@@ -11,6 +11,7 @@ const app = express();
 // ─── CORS Configuration ─────────────────────────────────
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:8080",
   "https://codereviewai-pi.vercel.app" // Your live Vercel domain
 ];
 
