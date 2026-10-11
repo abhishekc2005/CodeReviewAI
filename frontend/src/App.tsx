@@ -72,20 +72,11 @@ function App() {
   const [code, setCode] = useState("// ✨ Write or paste your code here to review");
   const [language, setLanguage] = useState("javascript");
   const [reviewMode, setReviewMode] = useState("code"); // "code" | "repo"
-<<<<<<< HEAD:frontend/src/App.tsx
-  const [repoUrl, setRepoUrl] = useState("");
-  const [review, setReview] = useState("Your AI code review will appear here...");
-  const [loading, setLoading] = useState(false);
-  const [reviewLabel, setReviewLabel] = useState(""); // label shown in right panel header
-  const [fixedCode, setFixedCode] = useState<string | null>(null);
-=======
-  
   // Code Review State
   const [codeReview, setCodeReview] = useState("Your AI code review will appear here...");
   const [codeReviewLoading, setCodeReviewLoading] = useState(false);
   const [codeReviewLabel, setCodeReviewLabel] = useState("");
-  const [fixedCode, setFixedCode] = useState(null);
->>>>>>> 993f44c (fix: responsive layout and review mode state isolation):frontend/src/App.jsx
+  const [fixedCode, setFixedCode] = useState<string | null>(null);
   const [fixing, setFixing] = useState(false);
 
   // Repo Review State
